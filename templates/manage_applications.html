@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Applications | AI Recruitment Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f1e8;
+            color: #111111;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: #f5f1e8;
+            border-bottom: 1px solid #e5ddd0;
+            padding: 18px 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #111111;
+            margin-left: 12px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: #ffffff;
+            color: #111111;
+            border: 1px solid #ece5da;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .page-header {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            margin-bottom: 0;
+        }
+
+        .stats-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #d96b3b;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+        }
+
+        .table-custom thead th {
+            background: #111111;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-weight: 600;
+        }
+
+        .table-custom tbody td {
+            padding: 18px 16px;
+            border-color: #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .table-custom tbody tr:hover {
+            background: #faf8f5;
+        }
+
+        .status-badge {
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-pending {
+            background: #fff4e6;
+            color: #d96b3b;
+        }
+
+        .status-accepted {
+            background: #e6f7ef;
+            color: #0f9d58;
+        }
+
+        .status-rejected {
+            background: #fdeaea;
+            color: #c53030;
+        }
+
+        .status-interview {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .actions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-view {
+            background: #f5f1e8;
+            color: #d96b3b;
+            border: 1px solid #d96b3b;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .btn-accept {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accept:hover {
+            background: #0f9d58;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-reject:hover {
+            background: #c53030;
+            color: white;
+        }
+
+        .btn-schedule {
+            background: #d96b3b;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-schedule:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 12px 24px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state h5 {
+            color: #111111;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .alert {
+            border-radius: 14px;
+            border: none;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .site-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 24px 0;
+            border-top: 1px solid #e5ddd0;
+            color: #6b7280;
+        }
+
+        .site-footer img {
+            width: 36px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 24px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .table-card {
+                padding: 20px;
+            }
+
+            .actions-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-custom">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="AI Recruitment Platform"
+                 class="brand-logo">
+            <span class="brand-text">AI Recruitment Platform</span>
+        </div>
+
+        <div class="nav-actions">
+            <a href="{{ url_for('view_notifications') }}" class="icon-btn">
+                🔔 Notifications
+                {% if unread_notifications_count and unread_notifications_count > 0 %}
+                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+<!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Manage Applications</h1>
+        <p class="page-subtitle">Review candidate applications, resumes, AI match scores, and schedule interviews.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="stats-card">
+                <p class="text-muted mb-1">Total Applications</p>
+                <div class="stats-number">{{ applications|length }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stats-card">
+                <p class="text-muted mb-1">Pending Review</p>
+                <div class="stats-number">{{ applications|selectattr('status', 'equalto', 'Pending')|list|length }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stats-card">
+                <p class="text-muted mb-1">Accepted</p>
+                <div class="stats-number">{{ applications|selectattr('status', 'equalto', 'Accepted')|list|length }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="table-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Candidate Applications</h3>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job Title</th>
+                        <th>AI Score</th>
+                        <th>Status</th>
+                        <th>Applied On</th>
+                        <th width="320">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if applications %}
+                        {% for application in applications %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ application.candidate_name }}</div>
+                                <small class="text-muted">{{ application.candidate_email }}</small>
+                            </td>
+
+                            <td>{{ application.job_title }}</td>
+
+                            <td>
+                                <span class="fw-semibold">{{ application.score }}%</span>
+                            </td>
+
+                            <td>
+                                {% if application.status == 'Pending' %}
+                                    <span class="status-badge status-pending">Pending</span>
+                                {% elif application.status == 'Accepted' %}
+                                    <span class="status-badge status-accepted">Accepted</span>
+                                {% elif application.status == 'Rejected' %}
+                                    <span class="status-badge status-rejected">Rejected</span>
+                                {% else %}
+                                    <span class="status-badge status-interview">{{ application.status }}</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if application.applied_on %}
+                                    {{ application.applied_on.strftime("%d-%m-%Y") }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="actions-container">
+                                    <a href="{{ url_for('uploaded_file', filename=application.resume) }}"
+                                       target="_blank"
+                                       class="btn-view">
+                                        View Resume
+                                    </a>
+
+                                    <a href="{{ url_for('accept_application', application_id=application._id) }}" class="btn-accept">
+                                        Accept
+                                    </a>
+
+                                    <a href="{{ url_for('reject_application', application_id=application._id) }}" class="btn-reject">
+                                        Reject
+                                    </a>
+
+                                    <a href="{{ url_for('schedule_interview', application_id=application._id) }}" class="btn-schedule">
+                                        Schedule
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <h5>No applications found</h5>
+                                    <p class="mb-0">Candidate applications will appear here once they apply for your jobs.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a href="{{ url_for('recruiter_dashboard') }}" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="site-footer">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        <p class="mb-1 fw-bold">AI Recruitment Platform</p>
+        <small>© 2026 AI Recruitment Platform. All Rights Reserved.</small>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

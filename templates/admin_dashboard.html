@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | AI Recruitment Platform{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    color:#111;
+}
+
+.stat-card{
+    background:#ffffff;
+    border:none;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 28px rgba(0,0,0,.12);
+}
+
+.stat-icon{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    background:#fff3ec;
+    color:#d96b3b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin:0 auto 15px;
+}
+
+.stat-number{
+    font-size:30px;
+    font-weight:700;
+    color:#111;
+}
+
+.stat-label{
+    color:#777;
+    font-size:15px;
+}
+
+.custom-btn{
+    background:#111;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:10px 20px;
+    font-weight:600;
+    transition:.3s;
+    text-decoration:none;
+}
+
+.custom-btn:hover{
+    background:#d96b3b;
+    color:white;
+}
+
+.activity-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    margin-top:35px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table thead{
+    background:#d96b3b;
+    color:white;
+}
+
+.table thead th{
+    border:none;
+    text-align:center;
+    padding:15px;
+}
+
+.table tbody td{
+    text-align:center;
+    padding:15px;
+    vertical-align:middle;
+}
+
+.table tbody tr:hover{
+    background:#fff7f3;
+}
+
+.badge-action{
+    background:#d96b3b;
+    color:white;
+    padding:7px 15px;
+    border-radius:25px;
+    font-size:13px;
+}
+
+.table-responsive{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+</style>
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="page-title">
+            👑 Admin Dashboard
+        </h2>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-2 col-md-4 col-sm-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+                <div class="stat-number">
+                    {{ total_users }}
+                </div>
+
+                <div class="stat-label">
+                    Total Users
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-sm-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+
+                <div class="stat-number">
+                    {{ total_candidates }}
+                </div>
+
+                <div class="stat-label">
+                    Candidates
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-sm-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-briefcase-fill"></i>
+                </div>
+
+                <div class="stat-number">
+                    {{ total_recruiters }}
+                </div>
+
+                <div class="stat-label">
+                    Recruiters
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+
+                <div class="stat-number">
+                    {{ total_jobs }}
+                </div>
+
+                <div class="stat-label">
+                    Jobs Posted
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-file-check-fill"></i>
+                </div>
+
+                <div class="stat-number">
+                    {{ total_applications }}
+                </div>
+
+                <div class="stat-label">
+                    Applications
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="mt-4 d-flex gap-3 flex-wrap">
+
+        <a href="{{ url_for('admin_users') }}" class="custom-btn">
+
+            <i class="bi bi-people me-2"></i>
+
+            Manage Users
+
+        </a>
+
+        <a href="{{ url_for('admin_audit_logs') }}" class="custom-btn">
+
+            <i class="bi bi-clock-history me-2"></i>
+
+            Audit Logs
+
+        </a>
+
+    </div>
+
+    <div class="activity-card">
+
+        <h4 class="mb-4">
+
+            <i class="bi bi-activity me-2"></i>
+
+            Recent Activity
+
+        </h4>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date & Time</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for log in recent_audit_logs %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ log.timestamp.strftime('%d %b %Y') }}
+
+                            <br>
+
+                            <small class="text-muted">
+
+                                {{ log.timestamp.strftime('%I:%M %p') }}
+
+                            </small>
+
+                        </td>
+
+                        <td>
+
+                            <i class="bi bi-person-circle me-1"></i>
+
+                            {{ log.actor_email }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge-action">
+
+                                {{ log.action }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ log.details }}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | AI Recruitment Platform{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    color:#111;
+}
+
+.notification-card{
+    background:#ffffff;
+    border:none;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.notification-item{
+    border:none;
+    border-radius:14px;
+    margin-bottom:15px;
+    padding:18px;
+    transition:.3s;
+    background:#fafafa;
+}
+
+.notification-item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    background:#fff7f3;
+}
+
+.unread{
+    border-left:6px solid #d96b3b;
+    background:#fff5ef;
+}
+
+.notification-message{
+    font-weight:500;
+    color:#222;
+    font-size:15px;
+}
+
+.notification-time{
+    font-size:13px;
+    color:#777;
+}
+
+.empty-box{
+    background:white;
+    border-radius:18px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.empty-box i{
+    font-size:60px;
+    color:#d96b3b;
+}
+
+.empty-box h5{
+    margin-top:15px;
+    font-weight:600;
+}
+
+.empty-box p{
+    color:#777;
+}
+
+.mark-read{
+    color:#d96b3b;
+    font-size:14px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.mark-read:hover{
+    color:#111;
+}
+
+</style>
+
+<div class="container py-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+
+        <h2 class="page-title">
+            🔔 Notifications
+        </h2>
+
+    </div>
+
+    {% if notifications|length == 0 %}
+
+        <div class="empty-box">
+
+            <i class="bi bi-bell"></i>
+
+            <h5>No Notifications</h5>
+
+            <p>You don't have any notifications yet.</p>
+
+        </div>
+
+    {% else %}
+
+    <div class="notification-card">
+
+        {% for n in notifications %}
+
+        <a href="{{ url_for('mark_notification_read', notification_id=n._id) }}"
+           class="text-decoration-none">
+
+            <div class="notification-item {% if not n.is_read %}unread{% endif %}">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+
+                        <div class="notification-message">
+
+                            {% if not n.is_read %}
+                                <span class="badge bg-warning text-dark me-2">
+                                    New
+                                </span>
+                            {% endif %}
+
+                            {{ n.message }}
+
+                        </div>
+
+                        <div class="notification-time mt-2">
+
+                            <i class="bi bi-clock"></i>
+
+                            {{ n.created_on.strftime('%d %b %Y, %I:%M %p') }}
+
+                        </div>
+
+                    </div>
+
+                    {% if not n.is_read %}
+
+                    <span class="mark-read">
+
+                        Mark as Read
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

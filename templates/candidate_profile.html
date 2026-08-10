@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | AI Recruitment Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f1e8;
+            color: #111111;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: #f5f1e8;
+            border-bottom: 1px solid #e5ddd0;
+            padding: 18px 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #111111;
+            margin-left: 12px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: #ffffff;
+            color: #111111;
+            border: 1px solid #e5ddd0;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            border-radius: 14px;
+            padding: 12px 16px;
+            border: 1px solid #e5ddd0;
+        }
+
+        .form-control:focus {
+            border-color: #d96b3b;
+            box-shadow: 0 0 0 0.2rem rgba(217, 107, 59, 0.15);
+        }
+
+        .section-label {
+            font-weight: 700;
+            color: #d96b3b;
+            margin: 24px 0 12px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .save-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 32px;
+            font-weight: 600;
+        }
+
+        .save-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 14px 32px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .alert {
+            border-radius: 14px;
+        }
+
+        .site-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 24px 0;
+            border-top: 1px solid #e5ddd0;
+            color: #6b7280;
+        }
+
+        .site-footer img {
+            width: 36px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-custom">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="AI Recruitment Platform"
+                 class="brand-logo">
+            <span class="brand-text">AI Recruitment Platform</span>
+        </div>
+
+        <div class="nav-actions">
+            <a href="{{ url_for('view_notifications') }}" class="icon-btn">
+                🔔 Notifications
+                {% if unread_notifications_count and unread_notifications_count > 0 %}
+                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="form-card">
+        <h1 class="form-title">My Profile</h1>
+        <p class="form-subtitle">
+            Keep your academic and professional details up to date. These details are required before you can apply for a job.
+        </p>
+
+        <form method="POST">
+
+            <div class="section-label">Academic Details</div>
+
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">School Name</label>
+                    <input type="text" class="form-control" name="school_name"
+                           value="{{ candidate.school_name if candidate else '' }}"
+                           placeholder="e.g. St. Xavier's High School" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">School Percentage (%)</label>
+                    <input type="text" class="form-control" name="school_percentage"
+                           value="{{ candidate.school_percentage if candidate else '' }}"
+                           placeholder="e.g. 92.5" required>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">College / University Name</label>
+                    <input type="text" class="form-control" name="college"
+                           value="{{ candidate.college if candidate else '' }}"
+                           placeholder="e.g. ABC Institute of Technology" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">College Marks (% or CGPA)</label>
+                    <input type="text" class="form-control" name="college_marks"
+                           value="{{ candidate.college_marks if candidate else '' }}"
+                           placeholder="e.g. 8.4 CGPA or 84%" required>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Highest Qualification</label>
+                    <input type="text" class="form-control" name="qualification"
+                           value="{{ candidate.qualification if candidate else '' }}"
+                           placeholder="e.g. B.Tech in Computer Science">
+                </div>
+            </div>
+
+            <div class="section-label">Other Details</div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">City</label>
+                    <input type="text" class="form-control" name="city"
+                           value="{{ candidate.city if candidate else '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Experience</label>
+                    <input type="text" class="form-control" name="experience"
+                           value="{{ candidate.experience if candidate else '' }}"
+                           placeholder="e.g. 1 year / Fresher">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Skills</label>
+                    <input type="text" class="form-control" name="skills"
+                           value="{{ candidate.skills if candidate else '' }}"
+                           placeholder="Python, Flask, MongoDB, React">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">LinkedIn</label>
+                    <input type="text" class="form-control" name="linkedin"
+                           value="{{ candidate.linkedin if candidate else '' }}">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">GitHub</label>
+                    <input type="text" class="form-control" name="github"
+                           value="{{ candidate.github if candidate else '' }}">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Portfolio</label>
+                    <input type="text" class="form-control" name="portfolio"
+                           value="{{ candidate.portfolio if candidate else '' }}">
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-3">
+                <button type="submit" class="save-btn">Save Profile</button>
+                <a href="{{ url_for('candidate_dashboard') }}" class="back-btn">Back to Dashboard</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="site-footer">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        <p class="mb-1 fw-bold">AI Recruitment Platform</p>
+        <small>© 2026 AI Recruitment Platform. All Rights Reserved.</small>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Interview | AI Recruitment Platform</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f1e8;
+            color: #111111;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: #f5f1e8;
+            border-bottom: 1px solid #e5ddd0;
+            padding: 18px 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #111111;
+            margin-left: 12px;
+        }
+
+        .logout-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .form-container {
+            min-height: calc(100vh - 90px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .form-title {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #111111;
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        .candidate-info {
+            background: #faf8f5;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #e5ddd0;
+        }
+
+        .candidate-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #111111;
+            margin-bottom: 8px;
+        }
+
+        .candidate-detail {
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .candidate-detail strong {
+            color: #111111;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid #e5ddd0;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #faf8f5;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #d96b3b;
+            box-shadow: 0 0 0 0.2rem rgba(217, 107, 59, 0.15);
+            background: white;
+        }
+
+        .form-hint {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .schedule-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 32px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 14px 32px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .alert {
+            border-radius: 14px;
+            border: none;
+            margin-bottom: 24px;
+        }
+
+        .site-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .site-footer img {
+            width: 30px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 30px 24px;
+                margin: 20px;
+            }
+
+            .form-title {
+                font-size: 1.7rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-custom">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="AI Recruitment Platform"
+                 class="brand-logo">
+            <span class="brand-text">AI Recruitment Platform</span>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="form-container">
+
+    <div>
+
+    <div class="form-card">
+
+        <div class="form-header">
+            <h1 class="form-title">Schedule Interview</h1>
+            <p class="form-subtitle">
+                Arrange an interview with the selected candidate and send them the details.
+            </p>
+        </div>
+
+        <!-- Candidate Information -->
+        <div class="candidate-info">
+            <div class="candidate-name">{{ application.candidate_name }}</div>
+            <div class="candidate-detail">
+                <strong>Job Position:</strong> {{ application.job_title }}
+            </div>
+            <div class="candidate-detail">
+                <strong>AI Match Score:</strong> {{ application.score|default(0) }}%
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Interview Date</label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Interview Time</label>
+                    <input type="time" name="time" class="form-control" required>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Interview Mode</label>
+                    <select name="mode" class="form-select" required>
+                        <option value="" disabled selected>Select interview mode</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                    </select>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Meeting Link (for Online Interview)</label>
+                    <input
+                        type="text"
+                        name="meeting_link"
+                        class="form-control"
+                        placeholder="https://meet.google.com/your-meeting-link">
+                    <div class="form-hint">
+                        Add a Google Meet, Zoom, or Microsoft Teams link if the interview is online.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="action-buttons">
+
+                <button type="submit" class="schedule-btn">
+                    Schedule Interview
+                </button>
+
+                <a href="{{ url_for('manage_applications') }}" class="cancel-btn">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="site-footer">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"><br>
+        © 2026 AI Recruitment Platform. All Rights Reserved.
+    </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            background-color: #f5f1e8;
+            font-family: 'Poppins', sans-serif;
+            color: #1a1a1a;
+        }
+
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .analytics-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .icon-btn {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid #ece5da;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #d65a31;
+            color: white;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 2rem;
+            border: 1px solid #ece5da;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .stat-label {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #d65a31;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: 22px;
+            border: 1px solid #ece5da;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #0f0f0f;
+            color: white;
+            padding: 1.2rem 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .score-badge {
+            background: #d65a31;
+            color: white;
+            border-radius: 12px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: #0f0f0f;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 0.8rem 1.6rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #d65a31;
+            color: white;
+        }
+
+        .report-btn {
+            background: #ffffff;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 0.7rem 1.4rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .report-btn:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 1.8rem;
+            border: 1px solid #ece5da;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .site-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid #e6ddd0;
+            color: #6b6b6b;
+        }
+
+        .site-footer img {
+            width: 40px;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+        }
+
+        .site-footer p {
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+    <div class="top-bar">
+        <div class="brand-row">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="AI Recruitment Platform"
+                 class="brand-logo">
+            <h1 class="analytics-title">Recruitment Analytics</h1>
+        </div>
+        <div class="top-actions">
+            <a href="{{ url_for('view_notifications') }}" class="icon-btn">
+                🔔 Notifications
+                {% if unread_notifications_count and unread_notifications_count > 0 %}
+                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- PDF Report Downloads -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{{ url_for('report_hiring_summary') }}" class="report-btn">📄 Download Hiring Summary (PDF)</a>
+        <a href="{{ url_for('report_interview_schedule') }}" class="report-btn">📄 Download Interview Schedule (PDF)</a>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Total Jobs</div>
+                <div class="stat-value">{{ total_jobs }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Total Applications</div>
+                <div class="stat-value">{{ total_applications }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value">{{ pending }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Accepted</div>
+                <div class="stat-value">{{ accepted }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Rejected</div>
+                <div class="stat-value">{{ rejected }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-label">Average AI Score</div>
+                <div class="stat-value">{{ average_score }}%</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="stat-card text-center">
+                <div class="stat-label">Highest AI Score</div>
+                <div class="stat-value">{{ highest_score }}%</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="stat-card text-center">
+                <div class="stat-label">Lowest AI Score</div>
+                <div class="stat-value">{{ lowest_score }}%</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <canvas id="jobsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card mt-5">
+        <div class="table-header">
+            <h4 class="mb-0">Top Candidates by AI Match Score</h4>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Job Title</th>
+                        <th>AI Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for candidate in top_candidates %}
+                    <tr>
+                        <td>{{ candidate.candidate_name }}</td>
+                        <td>{{ candidate.job_title }}</td>
+                        <td><span class="score-badge">{{ candidate.score }}%</span></td>
+                        <td>{{ candidate.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            No applications found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/recruiter_dashboard" class="back-btn">Back to Dashboard</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="site-footer">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        <p>AI Recruitment Platform</p>
+        <small>© 2026 AI Recruitment Platform. All Rights Reserved.</small>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Charts -->
+<script>
+    new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Accepted', 'Rejected', 'Pending'],
+            datasets: [{
+                data: [{{ accepted }}, {{ rejected }}, {{ pending }}],
+                backgroundColor: ['#198754', '#dc3545', '#ffc107']
+            }]
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: 'Application Status Breakdown' },
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('jobsChart'), {
+        type: 'bar',
+        data: {
+            labels: [{% for j in applications_per_job %}"{{ j.job_title }}",{% endfor %}],
+            datasets: [{
+                label: 'Applications',
+                data: [{% for j in applications_per_job %}{{ j.count }},{% endfor %}],
+                backgroundColor: '#d65a31'
+            }]
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: 'Applications per Job' },
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

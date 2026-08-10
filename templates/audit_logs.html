@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Logs | AI Recruitment Platform{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    color:#111;
+}
+
+.audit-card{
+    background:#ffffff;
+    border:none;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table thead{
+    background:#d96b3b;
+    color:white;
+}
+
+.table thead th{
+    border:none;
+    padding:16px;
+    font-weight:600;
+    text-align:center;
+    vertical-align:middle;
+}
+
+.table tbody td{
+    padding:15px;
+    text-align:center;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.3s;
+}
+
+.table tbody tr:hover{
+    background:#fff7f3;
+}
+
+.badge-action{
+    background:#d96b3b;
+    color:white;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:500;
+}
+
+.empty-box{
+    background:white;
+    border-radius:20px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.empty-box i{
+    font-size:60px;
+    color:#d96b3b;
+}
+
+.empty-box h5{
+    margin-top:15px;
+    font-weight:600;
+}
+
+.empty-box p{
+    color:#777;
+}
+
+.table-responsive{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+</style>
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="page-title">
+            📋 Audit Logs
+        </h2>
+
+    </div>
+
+    {% if logs|length == 0 %}
+
+    <div class="empty-box">
+
+        <i class="bi bi-clipboard-data"></i>
+
+        <h5>No Audit Logs Available</h5>
+
+        <p>No user activities have been recorded yet.</p>
+
+    </div>
+
+    {% else %}
+
+    <div class="audit-card">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date & Time</th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                        <th>Details</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for log in logs %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ log.timestamp.strftime('%d %b %Y') }}
+
+                            <br>
+
+                            <small class="text-muted">
+
+                                {{ log.timestamp.strftime('%I:%M %p') }}
+
+                            </small>
+
+                        </td>
+
+                        <td>
+
+                            <i class="bi bi-person-circle me-1"></i>
+
+                            {{ log.actor_email }}
+
+                        </td>
+
+                        <td>
+
+                            {{ log.actor_role }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge-action">
+
+                                {{ log.action }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ log.details }}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

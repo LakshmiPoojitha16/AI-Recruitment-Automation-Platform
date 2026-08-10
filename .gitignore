@@ -1,0 +1,25 @@
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
+.env.*
+
+# IDE files
+.idea/
+.vscode/
+
+# Uploaded files
+uploads/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Resume files / user-uploaded documents
+resumes/

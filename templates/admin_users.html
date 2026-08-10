@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users | AI Recruitment Platform{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    color:#111;
+}
+
+.user-card{
+    background:#ffffff;
+    border:none;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table thead{
+    background:#d96b3b;
+    color:white;
+}
+
+.table thead th{
+    border:none;
+    padding:16px;
+    text-align:center;
+    vertical-align:middle;
+    font-weight:600;
+}
+
+.table tbody td{
+    padding:16px;
+    text-align:center;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.3s;
+}
+
+.table tbody tr:hover{
+    background:#fff7f3;
+}
+
+.role-badge{
+    background:#fff3ec;
+    color:#d96b3b;
+    border-radius:20px;
+    padding:6px 14px;
+    font-weight:600;
+    display:inline-block;
+}
+
+.delete-btn{
+    background:#dc3545;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:8px 18px;
+    font-weight:600;
+    transition:.3s;
+    text-decoration:none;
+}
+
+.delete-btn:hover{
+    background:#bb2d3b;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.table-responsive{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.empty-box{
+    background:white;
+    border-radius:20px;
+    padding:60px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.empty-box i{
+    font-size:60px;
+    color:#d96b3b;
+}
+
+.empty-box h5{
+    margin-top:20px;
+    font-weight:600;
+}
+
+.empty-box p{
+    color:#777;
+}
+
+</style>
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="page-title">
+            <i class="bi bi-people-fill me-2"></i>
+            Manage Users
+        </h2>
+
+    </div>
+
+    {% if users|length == 0 %}
+
+    <div class="empty-box">
+
+        <i class="bi bi-person-x-fill"></i>
+
+        <h5>No Users Found</h5>
+
+        <p>There are currently no registered users.</p>
+
+    </div>
+
+    {% else %}
+
+    <div class="user-card">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Role</th>
+                        <th>Phone Number</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for u in users %}
+
+                    <tr>
+
+                        <td>
+
+                            <i class="bi bi-person-circle me-2"></i>
+
+                            {{ u.full_name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ u.email }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="role-badge">
+
+                                {{ u.role }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ u.get('phone', '-') }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{{ url_for('admin_delete_user', user_id=u._id) }}"
+                               class="delete-btn"
+                               onclick="return confirm('Are you sure you want to permanently delete this user?');">
+
+                                <i class="bi bi-trash-fill me-1"></i>
+
+                                Delete
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

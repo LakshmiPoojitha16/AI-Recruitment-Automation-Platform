@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Interviews | AI Recruitment Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f1e8;
+            color: #111111;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: #f5f1e8;
+            border-bottom: 1px solid #e5ddd0;
+            padding: 18px 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #111111;
+            margin-left: 12px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: #ffffff;
+            color: #111111;
+            border: 1px solid #e5ddd0;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .page-container {
+            padding: 40px 0;
+        }
+
+        .page-title {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: #111111;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .interview-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #111111;
+            margin-bottom: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0ebe3;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #111111;
+        }
+
+        .detail-value {
+            color: #6b7280;
+        }
+
+        .join-btn {
+            background: #111111;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 16px;
+        }
+
+        .join-btn:hover {
+            background: #d96b3b;
+            color: white;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: #faf8f5;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #d96b3b;
+            font-size: 2rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 12px 24px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .back-btn:hover {
+            background: #111111;
+            color: white;
+        }
+
+        .site-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 24px 0;
+            border-top: 1px solid #e5ddd0;
+            color: #6b7280;
+        }
+
+        .site-footer img {
+            width: 36px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-custom">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="AI Recruitment Platform"
+                 class="brand-logo">
+            <span class="brand-text">AI Recruitment Platform</span>
+        </div>
+
+        <div class="nav-actions">
+            <a href="{{ url_for('view_notifications') }}" class="icon-btn">
+                🔔 Notifications
+                {% if unread_notifications_count and unread_notifications_count > 0 %}
+                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container page-container">
+
+    <h1 class="page-title">My Interviews</h1>
+    <p class="page-subtitle">View all your scheduled interviews and join online meetings when available.</p>
+
+    {% if interviews %}
+
+        <div class="row">
+
+            {% for interview in interviews %}
+
+            <div class="col-md-6">
+
+                <div class="interview-card">
+
+                    <div class="job-title">
+                        {{ interview.job_title }}
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">{{ interview.date }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Time</span>
+                        <span class="detail-value">{{ interview.time }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Mode</span>
+                        <span class="detail-value">{{ interview.mode }}</span>
+                    </div>
+
+                    {% if interview.mode == "Online" and interview.meeting_link %}
+
+                    <a href="{{ interview.meeting_link }}"
+                       target="_blank"
+                       class="join-btn">
+
+                        Join Interview
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">📅</div>
+
+            <h3 class="fw-bold mb-3">No Interviews Scheduled</h3>
+
+            <p class="text-muted mb-0">
+                You do not have any interviews scheduled yet.
+                Once a recruiter schedules an interview, it will appear here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+    <a href="{{ url_for('candidate_dashboard') }}" class="back-btn">
+
+        Back to Dashboard
+
+    </a>
+
+    <!-- Footer -->
+    <div class="site-footer">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        <p class="mb-1 fw-bold">AI Recruitment Platform</p>
+        <small>© 2026 AI Recruitment Platform. All Rights Reserved.</small>
+    </div>
+
+</div>
+
+</body>
+</html>
